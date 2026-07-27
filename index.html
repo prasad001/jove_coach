@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Brand – JoVE · Google Ads Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --ink:#14161B; --paper:#F4F6F8; --surface:#FFFFFF; --line:#E4E7EC;
+  --muted:#6B7280; --soft:#9AA2AF;
+  --accent:#5646E0; --accent-soft:#EEEBFC;
+  --good:#0E9F6E; --good-soft:#E4F5EE;
+  --bad:#E5484D; --bad-soft:#FCEBEC;
+  --warn:#B26A00; --warn-soft:#FBF0DD;
+  --radius:11px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; color:var(--ink); background:var(--paper);
+  font-family:"Inter",system-ui,sans-serif; font-size:14px; line-height:1.5;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:26px 26px; background-position:-1px -1px;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 64px}
+h1,h2,h3{font-family:"Space Grotesk",sans-serif;font-weight:600;letter-spacing:-0.01em;margin:0}
+.mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+a{color:var(--accent)}
+
+/* header */
+header.masthead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:20px}
+.brandmark{display:flex;align-items:center;gap:12px}
+.dot{width:11px;height:36px;border-radius:3px;background:var(--accent)}
+.masthead h1{font-size:26px}
+.masthead .sub{color:var(--muted);font-size:12.5px;margin-top:3px}
+.acctpill{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 11px}
+
+/* control bar */
+.controls{position:sticky;top:0;z-index:20;background:rgba(244,246,248,.86);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;margin-bottom:22px;display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center}
+.cgroup{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.clabel{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--soft);font-weight:600}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:transparent;padding:7px 12px;font:inherit;font-size:12.5px;color:var(--muted);cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#fff;font-weight:600}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.dateinputs{display:flex;align-items:center;gap:6px}
+.dateinputs input{font:inherit;font-size:12.5px;font-family:"IBM Plex Mono",monospace;border:1px solid var(--line);border-radius:7px;padding:6px 8px;background:var(--surface);color:var(--ink)}
+.dateinputs span{color:var(--soft)}
+.rangeecho{font-size:12px;color:var(--muted)}
+.rangeecho b{color:var(--ink);font-weight:600}
+
+/* section titles */
+.sec{margin:30px 0 13px;display:flex;align-items:baseline;gap:12px}
+.sec h2{font-size:17px}
+.sec .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--accent);letter-spacing:.06em}
+.sec .note{font-size:11.5px;color:var(--soft);margin-left:auto}
+
+/* kpi grid */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 15px}
+.kpi .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--soft);font-weight:600}
+.kpi .v{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:23px;font-weight:600;margin-top:7px;letter-spacing:-.02em}
+.kpi .d{font-family:"IBM Plex Mono",monospace;font-size:11.5px;margin-top:5px;display:inline-flex;align-items:center;gap:5px}
+.d.up{color:var(--good)} .d.down{color:var(--bad)} .d.flat{color:var(--soft)}
+.d .arrow{font-size:10px}
+.d .lbl{color:var(--soft)}
+
+/* pulse row */
+.pulse{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 15px}
+.pcard .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--soft);font-weight:600}
+.pcard .row{display:flex;align-items:baseline;justify-content:space-between;margin-top:8px;gap:10px}
+.pcard .v{font-family:"IBM Plex Mono",monospace;font-size:20px;font-weight:600}
+.pcard .cmp{font-family:"IBM Plex Mono",monospace;font-size:11.5px}
+.pcard .foot{font-size:11px;color:var(--soft);margin-top:7px}
+
+/* signal split */
+.signal{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.signal .col{padding:16px 18px}
+.signal .col+.col{border-left:1px solid var(--line)}
+.signal h3{font-size:13px;display:flex;align-items:center;gap:8px;margin-bottom:11px}
+.tag{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;padding:3px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.06em}
+.tag.good{background:var(--good-soft);color:var(--good)}
+.tag.bad{background:var(--bad-soft);color:var(--bad)}
+.signal ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.signal li{font-size:13px;display:flex;gap:9px;align-items:flex-start}
+.signal li .mk{flex:0 0 auto;width:6px;height:6px;border-radius:50%;margin-top:6px}
+.signal .good li .mk{background:var(--good)} .signal .bad li .mk{background:var(--bad)}
+.signal li b{font-weight:600}
+.signal .num{font-family:"IBM Plex Mono",monospace;font-weight:600}
+
+/* chart */
+.chartcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 16px 8px}
+.charthead{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.chartwrap{height:320px;position:relative}
+
+/* tables */
+.tablecard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.tablecard .th{padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:10px}
+.tablecard .th h3{font-size:14px}
+.tablecard .th .hint{font-size:11px;color:var(--soft)}
+.scroll{overflow:auto;max-height:420px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:8px 12px;text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal}
+thead th{position:sticky;top:0;background:var(--surface);color:var(--soft);font-weight:600;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--line);z-index:1}
+tbody tr:nth-child(even){background:#FAFBFC}
+tbody td{border-bottom:1px solid #F0F2F5}
+td.n{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+td .term{color:var(--ink)}
+.badge{font-family:"IBM Plex Mono",monospace;font-size:10.5px;padding:2px 7px;border-radius:6px;font-weight:600}
+.badge.waste{background:var(--bad-soft);color:var(--bad)}
+.badge.win{background:var(--good-soft);color:var(--good)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid2-3{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
+.bar{height:6px;border-radius:3px;background:var(--accent-soft);position:relative;min-width:34px}
+.bar>span{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--accent)}
+.split{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+
+footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--soft);font-size:11.5px;line-height:1.7}
+footer b{color:var(--muted)}
+
+@media (max-width:900px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .pulse{grid-template-columns:1fr}
+  .signal{grid-template-columns:1fr}
+  .signal .col+.col{border-left:0;border-top:1px solid var(--line)}
+  .grid2,.grid2-3{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="brandmark">
+      <div class="dot" aria-hidden="true"></div>
+      <div>
+        <h1>Brand&nbsp;–&nbsp;JoVE · Google Ads</h1>
+        <div class="sub">Performance console · data 1 Apr – 26 Jul 2026 · currency USD</div>
+      </div>
+    </div>
+    <div class="acctpill">acct 4367089500 · Google Ads</div>
+  </header>
+
+  <div class="controls" role="region" aria-label="Filters">
+    <div class="cgroup">
+      <span class="clabel">Date range</span>
+      <div class="seg" id="presets" role="group" aria-label="Date presets">
+        <button data-days="7">7d</button>
+        <button data-days="14">14d</button>
+        <button data-days="30" aria-pressed="true">30d</button>
+        <button data-days="90">90d</button>
+        <button data-days="0">All</button>
+      </div>
+      <div class="dateinputs">
+        <input type="date" id="from" aria-label="From date">
+        <span>→</span>
+        <input type="date" id="to" aria-label="To date">
+      </div>
+    </div>
+    <div class="cgroup">
+      <span class="clabel">Trend by</span>
+      <div class="seg" id="gran" role="group" aria-label="Granularity">
+        <button data-g="w" aria-pressed="true">Weekly</button>
+        <button data-g="m">Monthly</button>
+      </div>
+    </div>
+    <div class="rangeecho" id="rangeEcho"></div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="sec"><span class="eyebrow">01</span><h2>Headline metrics</h2><span class="note" id="kpiNote"></span></div>
+  <div class="kpis" id="kpis"></div>
+
+  <!-- Pulse: week / month spend -->
+  <div class="pulse" id="pulse"></div>
+
+  <!-- Signal split -->
+  <div class="sec"><span class="eyebrow">02</span><h2>What&rsquo;s working / what&rsquo;s not</h2><span class="note">reads the selected range + account breakdowns</span></div>
+  <div class="signal">
+    <div class="col">
+      <h3><span class="tag good">Working</span> Momentum &amp; wins</h3>
+      <ul class="good" id="working"></ul>
+    </div>
+    <div class="col">
+      <h3><span class="tag bad">Not working</span> Leaks &amp; drags</h3>
+      <ul class="bad" id="notworking"></ul>
+    </div>
+  </div>
+
+  <!-- Trend -->
+  <div class="sec"><span class="eyebrow">03</span><h2>Trend</h2><span class="note" id="trendNote"></span></div>
+  <div class="chartcard">
+    <div class="charthead">
+      <div class="seg" id="metricSel" role="group" aria-label="Metric">
+        <button data-m="cost" aria-pressed="true">Spend</button>
+        <button data-m="conv">Conversions</button>
+        <button data-m="ctr">CTR</button>
+        <button data-m="cpa">Cost / conv</button>
+        <button data-m="clicks">Clicks</button>
+        <button data-m="impr">Impressions</button>
+      </div>
+    </div>
+    <div class="chartwrap"><canvas id="chart"></canvas></div>
+  </div>
+
+  <!-- Keywords -->
+  <div class="sec"><span class="eyebrow">04</span><h2>Keywords</h2><span class="note">entire account · 1 Apr – 26 Jul 2026</span></div>
+  <div class="grid2-3">
+    <div class="tablecard">
+      <div class="th"><h3>Top keywords</h3><span class="hint">by clicks · green = converting</span></div>
+      <div class="scroll"><table id="kwTop"></table></div>
+    </div>
+    <div class="tablecard">
+      <div class="th"><h3>Poor keywords</h3><span class="hint">clicks, zero conversions · by wasted spend</span></div>
+      <div class="scroll"><table id="kwPoor"></table></div>
+    </div>
+  </div>
+
+  <!-- Search terms -->
+  <div class="sec"><span class="eyebrow">05</span><h2>Search terms</h2><span class="note">what people actually typed · entire account</span></div>
+  <div class="tablecard">
+    <div class="th"><h3>Top search terms</h3><span class="hint">by clicks · flag = spend with no conversion</span></div>
+    <div class="scroll"><table id="stTop"></table></div>
+  </div>
+
+  <!-- City / Device / Channel -->
+  <div class="sec"><span class="eyebrow">06</span><h2>Where it runs</h2><span class="note">city, device &amp; channel · entire account</span></div>
+  <div class="grid2">
+    <div class="tablecard">
+      <div class="th"><h3>Top cities</h3><span class="hint">by clicks</span></div>
+      <div class="scroll" style="max-height:360px"><table id="cityTbl"></table></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="tablecard">
+        <div class="th"><h3>Device</h3><span class="hint">share of clicks</span></div>
+        <table id="devTbl"></table>
+      </div>
+      <div class="tablecard">
+        <div class="th"><h3>Channel</h3><span class="hint">Search vs Performance Max</span></div>
+        <table id="chTbl"></table>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div><b>Source.</b> Google Ads via Porter Metrics, pulled 27 Jul 2026. Cost in account currency (USD). Conversions are attribution-modelled, so they can be fractional and device/channel splits may differ slightly from account totals.</div>
+    <div><b>How to read it.</b> The date range and Weekly/Monthly toggle drive the headline metrics and the trend chart (built from daily totals). Deltas compare against the immediately preceding period of equal length. The keyword, search-term, city, device and channel tables are whole-account views over the full loaded window (1 Apr – 26 Jul 2026). Data has a no-activity gap 9–13 May.</div>
+    <div><b>Publish.</b> This is a single self-contained file — drop <code>index.html</code> into a GitHub repo and enable Pages (Settings → Pages → deploy from branch) to host it.</div>
+  </footer>
+</div>
+
+<script>
+/* ---------- embedded data ---------- */
+// daily: [YYYYMMDD, cost, clicks, impressions, conversions]
+const DAILY=[
+["20260401",65.97,38,578,5],["20260402",221.42,109,1091,9],["20260403",292.31,123,1648,13],["20260404",497.02,202,2304,27],["20260405",274.69,126,1593,21],["20260406",334.46,167,1730,18],["20260407",299.62,153,1994,14],["20260408",299.76,144,1588,20],["20260409",71.65,47,539,4],["20260410",6.17,2,22,0],["20260411",39.81,9,213,1],["20260412",89.95,15,276,1],["20260413",99.81,17,328,0],["20260414",81.99,12,250,0],["20260415",59.95,14,164,0],["20260416",13.25,2,72,0],["20260417",110.58,11,163,0],["20260418",117.39,15,250,0],["20260419",90.20,11,135,1],["20260420",103.09,13,305,2],["20260421",94.15,16,265,0],["20260422",102.58,17,220,2],["20260423",91.91,13,349,4],["20260424",35.68,8,202,1],["20260425",203.01,35,534,1],["20260426",90.96,15,152,1],["20260427",91.98,16,282,2],["20260428",93.03,15,291,0],["20260429",204.23,37,486,1],["20260430",168.14,32,373,2],
+["20260501",140.81,24,466,0],["20260502",313.81,44,513,0],["20260503",166.95,22,466,0],["20260504",254.70,41,769,0],["20260505",106.01,18,276,0],["20260506",312.53,41,677,9],["20260507",232.42,38,621,2],["20260508",20.92,5,71,0],["20260514",105.10,14,411,0],["20260515",109.83,23,389,0],["20260516",104.11,25,347,1],["20260517",111.70,21,322,0],["20260518",83.55,20,488,0],["20260519",94.60,21,472,0],["20260520",108.85,27,735,0],["20260521",45.02,7,85,2],["20260522",64.10,10,193,0],["20260523",147.84,33,606,3],["20260524",251.82,54,648,4],["20260525",49.02,8,236,0],["20260526",265.63,36,1008,0],["20260527",231.57,69,1451,4],["20260528",153.83,70,2822,4],["20260529",110.82,59,2527,3],["20260530",127.61,44,1698,4],["20260531",132.13,62,1789,2],
+["20260601",155.89,69,3262,3],["20260602",153.67,77,3578,3],["20260603",208.99,193,12093,4],["20260604",208.47,228,8614,10],["20260605",145.07,120,4341,1],["20260606",171.48,94,2732,10],["20260607",314.09,122,4016,7],["20260608",234.94,120,6652,3],["20260609",193.54,113,6692,4],["20260610",249.94,141,7809,6],["20260611",200.40,118,4460,5],["20260612",135.97,90,5286,7],["20260613",82.97,69,3933,2],["20260614",295.00,142,5250,6],["20260615",265.43,113,6910,6],["20260616",204.43,97,4772,9],["20260617",154.50,92,5046,4],["20260618",205.95,102,4333,6],["20260619",128.50,69,3310,4],["20260620",283.99,110,3724,5],["20260621",249.49,105,3280,5],["20260622",195.63,102,9265,6],["20260623",185.84,97,5202,7],["20260624",168.66,94,5509,5],["20260625",115.47,57,2827,2],["20260626",199.28,78,3700,2],["20260627",161.79,68,2180,2],["20260628",279.70,114,2923,6],["20260629",255.75,108,4266,2],["20260630",133.87,61,1916,0],
+["20260701",198.03,55,1405,9],["20260702",191.59,48,1281,5],["20260703",96.57,31,983,5],["20260704",113.74,41,1008,0],["20260705",230.20,69,1345,2],["20260706",289.59,71,1559,8],["20260707",272.78,63,943,7],["20260708",200.50,53,1096,2],["20260709",240.09,62,1407,6],["20260710",196.05,56,1445,6],["20260711",170.73,53,1068,4],["20260712",218.99,66,1340,1],["20260713",178.68,59,1381,6],["20260714",232.18,74,1463,6],["20260715",160.42,49,1126,4],["20260716",220.55,72,1301,5],["20260717",211.47,59,1145,5],["20260718",228.91,57,972,4],["20260719",172.56,48,945,2],["20260720",232.27,62,1233,4],["20260721",197.58,47,1132,4],["20260722",210.98,56,1217,2],["20260723",161.53,47,1029,6],["20260724",161.68,52,1166,5],["20260725",222.32,55,893,5],["20260726",164.58,61,756,3]
+];
+// keywords: [text, clicks, conv, cost, impr]
+const KW=[
+["how to manage employees",277,15,530.95,9405],["how to lead a team",269,12,596.43,12467],["improve management skills",220,8.45,510.28,11454],["adult anatomy",216,25,339.80,2527],["navigating difficult conversations",209,7,403.90,13439],["manager training",173,18.17,686.56,5116],["management skills training",140,9.5,584.10,2610],["financial education courses",122,5,696.91,2383],["managing conflict in the workplace",110,2,158.60,3364],["leadership skills training",95,2,176.91,3909],["how to become a manager",92,6.5,370.50,2639],["courses for stock market",73,5,530.94,1173],["how to speak professionally",64,10,265.56,759],["management skills course",64,6,171.58,2015],["marketing help online",63,2,483.05,926],["anatomy learning",53,5,90.81,386],["marketing digital course online",50,4,436.33,1017],["leadership skills",48,0,64.38,4869],["management and leadership training",46,1,154.29,2123],["biology eoc practice test",46,7,113.64,312],["how to attract and retain employees",43,4,90.65,77],["ap bio prep",42,4,82.21,375],["business training online",41,5,248.89,670],["finance course online",40,1,249.66,508],["biology review for eoc",39,4,84.93,292],["communication skills and personality development",39,5,192.96,761],["ap biology study guide",39,3,67.45,400],["gen chem crash course",39,5,75.66,587],["manager ability",38,2,37.20,2596],["management and finance courses",38,1,177.43,760],["management and leadership courses",38,2,95.12,977],["people management course",37,5,142.98,727],["biology course online",35,6,58.57,355],["handling difficult conversations at work",32,2,64.39,676],["how to motivate your team",30,0,29.98,1856],["management training courses",30,1,90.15,569],["influence and communication skills",30,1,122.26,429],["digital marketing course",29,4,128.43,362],["social media training",29,1,183.06,314],["online management training for professionals",29,3,66.76,839],["genetics course",28,6,54.35,207],["how to manage a team",28,2,113.16,343],["leadership workshops",28,1,117.09,654],["how to become better communicator",28,1,109.75,282],["biology for the ap course",28,5,48.87,443],["new manager essentials",26,9.78,124.46,609],["ap biology practice exam",26,4,47.51,190],["manager certification",26,4,143.92,297],["skills essentials",25,0,30.02,2824],["how to manage better",24,4,97.53,581],["digital marketing training",23,0,116.27,224],["how to give employee feedback",23,0,16.53,553],["how to be manager",23,2,105.39,340],["communication skills for managers",23,1,32.02,1328],["being a successful leader",22,0,98.41,428],["coaching training for managers",22,1,63.78,31],["becoming a better manager",22,3,116.97,285],["chemistry helper",22,5,45.91,280],["how to handle difficult conversations at work",22,0,12.65,950],["how to study for ap bio",21,2,38.95,277],["chemistry homework",21,0,42.20,250],["biology eoc prep",21,5,44.44,230],["managerial and leadership training",21,1,41.45,2364],["workplace leadership skills",19,1,68.65,310],["dealing with difficult people at work",19,0,45.73,723],["how to communicate effectively with people",19,1,82.29,261],["being a great manager",19,0,79.99,255],["managers certificate",19,2,123.42,251],["conflict management for managers",19,0,15.82,378],["leadership and management",18,0,65.49,451]
+];
+// search terms: [term, clicks, cost, impr, conv]
+const ST=[
+["product management studies",59,154.48,82,6],["volunteer leadership training",42,81.61,123,1],["employee retention software",34,73.09,56,3],["coaching training for managers",33,94.18,51,2],["anatomy learning",20,32.46,138,3],["biology eoc practice test",18,41.35,113,2],["how to be a good manager",17,53.45,308,0],["remote team management",15,40.55,23,0],["articulation training",15,78.76,136,2],["leadership skills",13,28.40,735,2],["leadership development programs",13,23.66,53,0],["how to be a manager",13,46.26,244,0],["hospitality leadership training",13,43.12,20,0],["advanced certificate in business management",13,41.49,19,0],["employee engagement training",13,51.91,18,1],["employee engagement training for managers",12,48.76,28,2],["how to attract and retain employees",11,36.12,23,2],["how to be a good manager and leader",10,29.14,144,1],["onboarding training for managers",10,33.07,20,0],["how to recruit and retain employees",10,25.36,14,1],["chemistry en nobook",9,17.27,51,4],["how to be a better manager",9,29.84,161,1],["organizational leadership training",8,22.19,62,0],["leadership training",8,48.73,295,1],["volunteer leadership program",8,12.04,20,0],["insead online",8,14.25,9,1],["leadership skill development",8,5.58,17,0],["paid management training programs",7,22.35,17,0],["learn chemistry",7,20.79,58,1],["managing employee benefits",7,21.74,12,0],["new employee orientation program",7,17.37,10,0],["how to be a good leader at work",7,15.91,76,0],["conflict resolution",7,13.02,132,0],["digital leadership training",7,19.28,26,0],["anatomy and physiology",7,8.93,152,1],["how to become a better manager",7,51.56,48,1],["human anatomy",6,12.07,34,0],["human biodigital",6,7.53,67,1],["how to get more followers on instagram",6,46.44,21,0],["management skills",6,5.60,176,0],["hotmart",6,31.11,76,0],["manager training",6,18.26,87,0],["manager certification course",6,20.31,25,0],["employee engagement programs",6,13.21,10,0],["anatomy",6,9.10,39,2],["how to hire and retain good employees",6,14.56,11,2],["how to be a good supervisor",5,7.70,104,1],["human resource management online course",5,26.63,5,4],["being a good manager",5,9.62,23,0],["financial literacy course",5,26.35,156,0],["employee engagement techniques",5,11.50,6,1],["ap biology practice test",5,8.24,34,0],["how to be a great manager and leader",5,24.17,31,0],["how do i become a better active listener in conversations",5,30.25,338,2],["how to be a leader at work",5,15.89,55,0],["ap bio practice test",5,7.77,41,0],["best trainings for product managers",4,8.82,8,0],["supervisor training",4,5.23,56,1],["conflict resolution strategies",4,21.34,35,0],["ap bio review",4,5.19,26,0],["leadership videos for managers",4,8.37,29,0],["manager certification",4,28.07,40,0],["ap chemistry review",4,6.67,30,1],["yoodli",4,18.93,46,1],["hubspot academy",4,19.15,147,0],["improving employee engagement to drive business performance",4,13.18,9,0],["project management for beginners",4,6.77,269,0],["how to be a great manager",4,23.44,49,0],["conflict resolution in the workplace",4,2.79,139,0],["leadership skills for managers",4,16.57,31,1],["managing employee compensation",4,10.05,8,1],["organic chemistry ai",4,9.36,29,0],["conflict management",4,4.21,55,0],["1 dollar wiser course com",3,41.10,39,1]
+];
+// city: [city, cost, impr, clicks, conv]
+const CITY=[
+["New York",679.60,7855,260,18],["Houston",266.20,3534,114,6],["Los Angeles",221.83,3284,111,6],["Seattle",375.65,1306,77,18],["Chicago",160.06,2627,67,5],["Palm Beach Shores",206.15,599,61,7],["Atlanta",138.61,1723,54,2],["Dallas",168.09,1692,53,4],["Cambridge",193.90,2953,52,3],["Las Vegas",133.86,1687,50,1],["Austin",133.14,1216,48,6],["Phoenix",124.60,1432,46,2],["Unknown",101.49,456,44,5],["San Diego",91.71,1579,43,1],["Jacksonville",116.60,968,42,0],["Charlotte",135.55,1267,42,1],["Philadelphia",157.42,1618,42,2],["San Francisco",85.01,1084,38,3],["Orlando",74.49,1127,38,2],["Miami",98.46,983,36,6.82],["Baltimore",73.72,1036,35,0],["Boston",102.44,1358,35,3],["Arlington",75.47,705,31,1],["San Jose",71.47,1059,30,1],["Tulsa",65.18,813,30,3],["Sacramento",56.68,744,29,0],["Columbus",60.89,938,28,0],["Washington",78.61,1073,28,1],["Memphis",77.47,620,28,2],["Indianapolis",79.35,828,27,0],["Fort Worth",74.57,844,25,1],["Tampa",48.64,916,25,3],["San Antonio",97.79,1024,24,1],["Kansas City",91.40,635,24,2],["Minneapolis",40.98,686,23,2],["Raleigh",50.03,918,22,3],["Nashville",53.84,892,22,0],["Detroit",43.53,739,21,0],["Columbia",49.49,596,21,2],["El Paso",41.79,596,20,1],["College Park",54.99,415,20,2],["Denver",35.77,1016,20,0],["Buffalo",36.98,353,20,0],["Cleveland",71.97,468,20,0],["Fresno",46.84,315,19,2],["New Orleans",57.07,532,18,1],["Oklahoma City",47.89,565,18,2],["Riverside",47.14,268,17,2],["Portland",62.56,787,17,1],["Alexandria",56.96,398,16,1],["Fayetteville",69.28,299,16,2],["Tucson",77.37,365,15,3],["St. Louis",26.17,458,15,1],["Newark",37.80,345,15,3],["Virginia Beach",41.32,360,14,0],["Lexington",28.63,283,14,1],["Albany",38.12,243,14,1],["Tallahassee",49.54,186,14,0],["Louisville",47.76,446,14,0],["Pittsburgh",26.34,432,13,1]
+];
+// device / channel: [name, cost, clicks, impr, conv]
+const DEV=[["Mobile",13975.29,5214,128811,307],["Desktop",5044.89,1572,85716,126],["Tablet",283.14,113,2448,10]];
+const CH=[["Search",16598.29,5124,140838,368],["Performance Max",2705.04,1775,76161,78]];
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const fmtUSD=(n,d=0)=>'$'+(n||0).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const fmtUSD2=n=>fmtUSD(n,2);
+const fmtInt=n=>Math.round(n||0).toLocaleString('en-US');
+const fmtPct=(n,d=1)=>((n||0)*100).toFixed(d)+'%';
+const fmtNum=(n,d=1)=>(n||0).toFixed(d);
+const D=s=>new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8));
+const iso=dt=>dt.getFullYear()+String(dt.getMonth()+1).padStart(2,'0')+String(dt.getDate()).padStart(2,'0');
+const isoDash=dt=>dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
+const MINDATE=DAILY[0][0], MAXDATE=DAILY[DAILY.length-1][0];
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function agg(rows){ // rows of daily -> summed metrics + derived
+  let c=0,cl=0,im=0,cv=0;
+  rows.forEach(r=>{c+=r[1];cl+=r[2];im+=r[3];cv+=r[4];});
+  return {cost:c,clicks:cl,impr:im,conv:cv,
+    ctr:im?cl/im:0, cpc:cl?c/cl:0, cpa:cv?c/cv:0, cr:cl?cv/cl:0};
+}
+function inRange(from,to){ return DAILY.filter(r=>r[0]>=from&&r[0]<=to); }
+function prevRange(from,to){
+  const f=D(from), t=D(to); const len=Math.round((t-f)/864e5)+1;
+  const pt=new Date(f); pt.setDate(pt.getDate()-1);
+  const pf=new Date(pt); pf.setDate(pf.getDate()-len+1);
+  return inRange(iso(pf),iso(pt));
+}
+function deltaHTML(cur,prev,opts={}){
+  const good=opts.lowerBetter? cur<prev : cur>prev;
+  if(prev===0||!isFinite(prev)) return '<span class="d flat"><span class="lbl">no prior</span></span>';
+  const pct=(cur-prev)/Math.abs(prev);
+  if(Math.abs(pct)<0.0005) return '<span class="d flat">– <span class="lbl">vs prev</span></span>';
+  const cls=good?'up':'down'; const ar=pct>0?'▲':'▼';
+  return `<span class="d ${cls}"><span class="arrow">${ar}</span>${(pct>0?'+':'')}${(pct*100).toFixed(1)}%<span class="lbl">vs prev</span></span>`;
+}
+
+/* ---------- state ---------- */
+let state={from:null,to:null,gran:'w',metric:'cost'};
+let chart=null;
+
+function setRange(from,to){
+  state.from=from<MINDATE?MINDATE:from;
+  state.to=to>MAXDATE?MAXDATE:to;
+  $('#from').value=isoDash(D(state.from));
+  $('#to').value=isoDash(D(state.to));
+  render();
+}
+
+/* ---------- KPI + pulse ---------- */
+function renderKPIs(){
+  const cur=agg(inRange(state.from,state.to));
+  const prev=agg(prevRange(state.from,state.to));
+  const defs=[
+    ['Spend',fmtUSD(cur.cost),cur.cost,prev.cost,{}],
+    ['Conversions',fmtNum(cur.conv,0),cur.conv,prev.conv,{}],
+    ['Clicks',fmtInt(cur.clicks),cur.clicks,prev.clicks,{}],
+    ['Impressions',fmtInt(cur.impr),cur.impr,prev.impr,{}],
+    ['CTR',fmtPct(cur.ctr,2),cur.ctr,prev.ctr,{}],
+    ['Avg. CPC',fmtUSD2(cur.cpc),cur.cpc,prev.cpc,{lowerBetter:true}],
+    ['Cost / conv.',cur.conv?fmtUSD2(cur.cpa):'—',cur.cpa,prev.cpa,{lowerBetter:true}],
+    ['Conv. rate',fmtPct(cur.cr,2),cur.cr,prev.cr,{}],
+  ];
+  $('#kpis').innerHTML=defs.map(([k,v,c,p,o])=>
+    `<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div>${deltaHTML(c,p,o)}</div>`).join('');
+  const days=Math.round((D(state.to)-D(state.from))/864e5)+1;
+  const noAct=days-inRange(state.from,state.to).filter(r=>r[1]>0).length;
+  $('#kpiNote').textContent=`${days} days · deltas vs prior ${days} days`;
+  $('#trendNote').textContent=`${isoDash(D(state.from))} → ${isoDash(D(state.to))}`;
+  $('#rangeEcho').innerHTML=`Showing <b>${isoDash(D(state.from))}</b> → <b>${isoDash(D(state.to))}</b>`;
+
+  // pulse: fixed latest-week and month-to-date (independent of selector)
+  const wk=agg(inRange('20260720','20260726')), wkP=agg(inRange('20260713','20260719'));
+  const mo=agg(inRange('20260701','20260726')), moP=agg(inRange('20260601','20260626'));
+  const pulse=[
+    ['Spend · latest week', fmtUSD(wk.cost), wk.cost, wkP.cost, '20–26 Jul vs 13–19 Jul'],
+    ['Spend · month to date', fmtUSD(mo.cost), mo.cost, moP.cost, 'Jul 1–26 vs Jun 1–26'],
+    ['No-activity days · range', noAct+' of '+days, null, null, 'days with zero recorded spend']
+  ];
+  $('#pulse').innerHTML=pulse.map(([k,v,c,p,foot])=>{
+    const cmp = c===null? '' : deltaHTML(c,p,{});
+    return `<div class="pcard"><div class="k">${k}</div><div class="row"><div class="v">${v}</div><div class="cmp">${cmp}</div></div><div class="foot">${foot}</div></div>`;
+  }).join('');
+}
+
+/* ---------- insights ---------- */
+function renderInsights(){
+  const cur=agg(inRange(state.from,state.to));
+  const prev=agg(prevRange(state.from,state.to));
+  const work=[], bad=[];
+  const pc=(a,b)=>b?((a-b)/Math.abs(b)*100):0;
+
+  // conversions momentum
+  if(cur.conv>prev.conv && prev.conv>0) work.push(`Conversions <b class="num">+${pc(cur.conv,prev.conv).toFixed(0)}%</b> vs the prior period (${fmtNum(cur.conv,0)} vs ${fmtNum(prev.conv,0)}).`);
+  else if(cur.conv<prev.conv && prev.conv>0) bad.push(`Conversions <b class="num">${pc(cur.conv,prev.conv).toFixed(0)}%</b> vs the prior period (${fmtNum(cur.conv,0)} vs ${fmtNum(prev.conv,0)}).`);
+  // CTR
+  if(cur.ctr>=prev.ctr) work.push(`CTR holding at <b class="num">${fmtPct(cur.ctr,2)}</b> — clicks per impression steady or up.`);
+  else bad.push(`CTR slipped to <b class="num">${fmtPct(cur.ctr,2)}</b> from ${fmtPct(prev.ctr,2)} — creative/relevance worth a look.`);
+  // CPA direction
+  if(cur.conv&&prev.conv){ if(cur.cpa<=prev.cpa) work.push(`Cost per conversion improved to <b class="num">${fmtUSD2(cur.cpa)}</b>.`); else bad.push(`Cost per conversion rose to <b class="num">${fmtUSD2(cur.cpa)}</b> from ${fmtUSD2(prev.cpa)}.`);}
+
+  // channel efficiency (full window)
+  const s=CH[0], p=CH[1];
+  const sCpa=s[4]?s[1]/s[4]:0, pCpa=p[4]?p[1]/p[4]:0;
+  if(pCpa && pCpa<sCpa) work.push(`Performance Max converts cheaper — <b class="num">${fmtUSD2(pCpa)}</b>/conv vs Search <span class="num">${fmtUSD2(sCpa)}</span> (account-wide).`);
+  else work.push(`Search carries the account: <b class="num">${fmtInt(s[4])}</b> conversions at <span class="num">${fmtUSD2(sCpa)}</span> each.`);
+
+  // device
+  const totCl=DEV.reduce((a,d)=>a+d[2],0);
+  work.push(`Mobile drives <b class="num">${(DEV[0][2]/totCl*100).toFixed(0)}%</b> of clicks — the account is mobile-first.`);
+
+  // best converting city (min 5 conv)
+  const bc=[...CITY].filter(c=>c[4]>=5).sort((a,b)=> (a[1]/a[4]) - (b[1]/b[4]))[0];
+  if(bc) work.push(`<b>${bc[0]}</b> is the standout geo — ${fmtNum(bc[4],0)} conversions at <span class="num">${fmtUSD2(bc[1]/bc[4])}</span>/conv.`);
+  // top converting keyword
+  const tk=[...KW].sort((a,b)=>b[1]-a[1])[0];
+
+  // waste: keywords with clicks and zero conv
+  const wasteRows=KW.filter(k=>k[2]===0&&k[1]>=10).sort((a,b)=>b[3]-a[3]);
+  const waste=wasteRows.reduce((a,k)=>a+k[3],0);
+  if(wasteRows.length) bad.push(`<b class="num">${fmtUSD(waste)}</b> on <b>${wasteRows.length}</b> keywords with ≥10 clicks and <b>zero</b> conversions — e.g. “${wasteRows[0][0]}” (${wasteRows[0][1]} clicks). Candidates to pause or rework.`);
+  // dead cities (spend, 0 conv)
+  const deadCity=CITY.filter(c=>c[4]===0&&c[3]>=20).sort((a,b)=>b[1]-a[1]);
+  if(deadCity.length) bad.push(`${deadCity.length} cities spent with no conversions — top is <b>${deadCity[0][0]}</b> (${fmtUSD(deadCity[0][1])}, ${deadCity[0][3]} clicks).`);
+  // pmax visibility note
+  bad.push(`Performance Max shows <b class="num">${fmtInt(p[3])}</b> impressions but only <span class="num">${fmtNum(p[4],0)}</span> conversions — high reach, thin return so far.`);
+  // tablet
+  bad.push(`Tablet is noise: <b class="num">${(DEV[2][2]/totCl*100).toFixed(1)}%</b> of clicks — safe to exclude.`);
+
+  $('#working').innerHTML=work.map(t=>`<li><span class="mk"></span><span>${t}</span></li>`).join('');
+  $('#notworking').innerHTML=bad.map(t=>`<li><span class="mk"></span><span>${t}</span></li>`).join('');
+}
+
+/* ---------- chart ---------- */
+function buckets(){
+  const rows=inRange(state.from,state.to);
+  const map=new Map();
+  rows.forEach(r=>{
+    const dt=D(r[0]); let key,label;
+    if(state.gran==='m'){ key=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0'); label=MONTHS[dt.getMonth()]+' '+dt.getFullYear(); }
+    else { const m=new Date(dt); const wd=(m.getDay()+6)%7; m.setDate(m.getDate()-wd); key=iso(m); label=m.getDate()+' '+MONTHS[m.getMonth()]; }
+    if(!map.has(key)) map.set(key,{label,cost:0,clicks:0,impr:0,conv:0});
+    const b=map.get(key); b.cost+=r[1];b.clicks+=r[2];b.impr+=r[3];b.conv+=r[4];
+  });
+  return [...map.entries()].sort((a,b)=>a[0]<b[0]?-1:1).map(e=>e[1]);
+}
+const METRICS={
+  cost:{label:'Spend',type:'bar',color:'#5646E0',val:b=>b.cost,fmt:v=>fmtUSD(v)},
+  conv:{label:'Conversions',type:'bar',color:'#0E9F6E',val:b=>b.conv,fmt:v=>fmtNum(v,0)},
+  ctr:{label:'CTR',type:'line',color:'#B26A00',val:b=>b.impr?b.clicks/b.impr:0,fmt:v=>fmtPct(v,2)},
+  cpa:{label:'Cost / conv.',type:'line',color:'#E5484D',val:b=>b.conv?b.cost/b.conv:0,fmt:v=>fmtUSD2(v)},
+  clicks:{label:'Clicks',type:'bar',color:'#3A6FF0',val:b=>b.clicks,fmt:v=>fmtInt(v)},
+  impr:{label:'Impressions',type:'bar',color:'#8A7CF0',val:b=>b.impr,fmt:v=>fmtInt(v)},
+};
+function renderChart(){
+  const bs=buckets(); const m=METRICS[state.metric];
+  const labels=bs.map(b=>b.label); const data=bs.map(b=>m.val(b));
+  const ctx=$('#chart');
+  if(chart) chart.destroy();
+  chart=new Chart(ctx,{
+    type:m.type,
+    data:{labels,datasets:[{
+      label:m.label,data,
+      borderColor:m.color,backgroundColor:m.type==='bar'?m.color:'transparent',
+      borderWidth:m.type==='line'?2.5:0,pointRadius:m.type==='line'?3:0,pointBackgroundColor:m.color,
+      borderRadius:5,maxBarThickness:46,tension:.3,fill:false
+    }]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{
+        backgroundColor:'#14161B',padding:10,titleFont:{family:'IBM Plex Mono'},bodyFont:{family:'IBM Plex Mono'},
+        callbacks:{label:c=>m.label+': '+m.fmt(c.parsed.y)}
+      }},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{family:'IBM Plex Mono',size:11},color:'#6B7280',maxRotation:0,autoSkipPadding:14}},
+        y:{beginAtZero:true,grid:{color:'#EEF0F3'},ticks:{font:{family:'IBM Plex Mono',size:11},color:'#6B7280',callback:v=>m.fmt(v)}}
+      }
+    }
+  });
+}
+
+/* ---------- tables ---------- */
+function tbl(el,head,rows){ el.innerHTML='<thead><tr>'+head.map(h=>`<th>${h}</th>`).join('')+'</tr></thead><tbody>'+rows.join('')+'</tbody>'; }
+
+function renderTables(){
+  // top keywords by clicks
+  const kwTop=[...KW].sort((a,b)=>b[1]-a[1]).slice(0,25).map(k=>{
+    const cpc=k[1]?k[3]/k[1]:0, cr=k[1]?k[2]/k[1]:0, conv=k[2];
+    const win=conv>0?'<span class="badge win">'+fmtNum(conv,0)+'</span>':'<span class="badge waste">0</span>';
+    return `<tr><td><span class="term">${k[0]}</span></td><td class="n">${fmtInt(k[1])}</td><td class="n">${win}</td><td class="n">${fmtUSD(k[3])}</td><td class="n">${fmtUSD2(cpc)}</td><td class="n">${fmtPct(cr,1)}</td></tr>`;
+  });
+  tbl($('#kwTop'),['Keyword','Clicks','Conv','Cost','CPC','Conv rate'],kwTop);
+
+  // poor keywords: 0 conv, >=8 clicks, by cost
+  const poor=KW.filter(k=>k[2]===0&&k[1]>=8).sort((a,b)=>b[3]-a[3]).map(k=>{
+    const cpc=k[1]?k[3]/k[1]:0;
+    return `<tr><td><span class="term">${k[0]}</span></td><td class="n">${fmtInt(k[1])}</td><td class="n">${fmtInt(k[4])}</td><td class="n">${fmtUSD(k[3])}</td><td class="n">${fmtUSD2(cpc)}</td></tr>`;
+  });
+  tbl($('#kwPoor'),['Keyword','Clicks','Impr','Wasted spend','CPC'],poor);
+
+  // top search terms by clicks
+  const st=[...ST].sort((a,b)=>b[1]-a[1]).slice(0,30).map(s=>{
+    const cpc=s[1]?s[2]/s[1]:0, conv=s[4];
+    const flag=conv>0?'<span class="badge win">'+fmtNum(conv,0)+'</span>':'<span class="badge waste">0</span>';
+    return `<tr><td><span class="term">${s[0]}</span></td><td class="n">${fmtInt(s[1])}</td><td class="n">${flag}</td><td class="n">${fmtUSD(s[2])}</td><td class="n">${fmtUSD2(cpc)}</td></tr>`;
+  });
+  tbl($('#stTop'),['Search term','Clicks','Conv','Cost','CPC'],st);
+
+  // city
+  const maxCl=Math.max(...CITY.map(c=>c[3]));
+  const city=[...CITY].sort((a,b)=>b[3]-a[3]).slice(0,30).map(c=>{
+    const cpa=c[4]?c[1]/c[4]:0;
+    const w=(c[3]/maxCl*100).toFixed(0);
+    return `<tr><td>${c[0]}</td><td class="n"><div class="split">${fmtInt(c[3])}<div class="bar" style="width:60px"><span style="width:${w}%"></span></div></div></td><td class="n">${fmtNum(c[4],0)}</td><td class="n">${fmtUSD(c[1])}</td><td class="n">${c[4]?fmtUSD2(cpa):'—'}</td></tr>`;
+  });
+  tbl($('#cityTbl'),['City','Clicks','Conv','Cost','Cost/conv'],city);
+
+  // device
+  const dTot=DEV.reduce((a,d)=>a+d[2],0);
+  const dev=DEV.map(d=>{
+    const share=(d[2]/dTot*100).toFixed(1), cpa=d[4]?d[1]/d[4]:0;
+    return `<tr><td>${d[0]}</td><td class="n">${share}%</td><td class="n">${fmtInt(d[2])}</td><td class="n">${fmtNum(d[4],0)}</td><td class="n">${fmtUSD(d[1])}</td><td class="n">${d[4]?fmtUSD2(cpa):'—'}</td></tr>`;
+  });
+  tbl($('#devTbl'),['Device','Clicks %','Clicks','Conv','Cost','Cost/conv'],dev);
+
+  // channel
+  const ch=CH.map(c=>{
+    const cpa=c[4]?c[1]/c[4]:0, ctr=c[3]?c[2]/c[3]:0;
+    return `<tr><td>${c[0]}</td><td class="n">${fmtUSD(c[1])}</td><td class="n">${fmtInt(c[2])}</td><td class="n">${fmtPct(ctr,2)}</td><td class="n">${fmtNum(c[4],0)}</td><td class="n">${fmtUSD2(cpa)}</td></tr>`;
+  });
+  tbl($('#chTbl'),['Channel','Cost','Clicks','CTR','Conv','Cost/conv'],ch);
+}
+
+/* ---------- render orchestrator ---------- */
+function render(){ renderKPIs(); renderInsights(); renderChart(); }
+
+/* ---------- events ---------- */
+$('#presets').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  [...e.currentTarget.children].forEach(x=>x.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed','true');
+  const days=+b.dataset.days;
+  if(days===0) setRange(MINDATE,MAXDATE);
+  else { const t=D(MAXDATE); const f=new Date(t); f.setDate(f.getDate()-days+1); setRange(iso(f),MAXDATE); }
+});
+$('#gran').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  [...e.currentTarget.children].forEach(x=>x.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed','true'); state.gran=b.dataset.g; renderChart();
+});
+$('#metricSel').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  [...e.currentTarget.children].forEach(x=>x.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed','true'); state.metric=b.dataset.m; renderChart();
+});
+function clampInput(){
+  let f=$('#from').value.replace(/-/g,''), t=$('#to').value.replace(/-/g,'');
+  if(!f||!t) return; if(f>t){const x=f;f=t;t=x;}
+  [...$('#presets').children].forEach(x=>x.setAttribute('aria-pressed','false'));
+  setRange(f,t);
+}
+$('#from').addEventListener('change',clampInput);
+$('#to').addEventListener('change',clampInput);
+$('#from').min=$('#to').min=isoDash(D(MINDATE));
+$('#from').max=$('#to').max=isoDash(D(MAXDATE));
+
+/* init: last 30 days */
+(function(){ const t=D(MAXDATE); const f=new Date(t); f.setDate(f.getDate()-29); setRange(iso(f),MAXDATE); renderTables(); })();
+</script>
+</body>
+</html>
