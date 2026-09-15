@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Manager Essentials — JoVE Coach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#2080e8;
+    --ink:#505050;
+    --ink-soft:color-mix(in srgb, var(--ink), white 12%);
+    --slate:#707070;
+    --white:#ffffff;
+    --paper-dim:color-mix(in srgb, var(--slate), white 94%);
+    --line: rgba(80,80,80,0.15);
+    --line-light: rgba(255,255,255,0.18);
+    --radius: 3px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--white);color:var(--ink);font-family:'Source Sans 3', sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Fraunces', serif;font-weight:500;margin:0;letter-spacing:-0.01em;}
+  p{margin:0;}
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 32px;}
+  :focus-visible{outline:2px solid var(--blue);outline-offset:3px;}
+  @media (prefers-reduced-motion: reduce){*{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}}
+
+  .chev{display:inline-block;width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid currentColor;}
+
+  /* lifestyle photography — duotone treatment keeps any stock photo inside the brand palette */
+  .photo-frame{position:relative;overflow:hidden;background:var(--ink);}
+  .photo-frame img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(1) contrast(1.05);}
+  .photo-frame::after{content:"";position:absolute;inset:0;background:var(--blue);mix-blend-mode:multiply;opacity:0.4;}
+  .photo-frame .cap{
+    position:absolute; left:0; right:0; bottom:0;
+    padding:18px 22px;
+    background:linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+    color:var(--white);
+    font-size:13px;
+    font-weight:600;
+  }
+  .photo-band{height:340px;}
+  .photo-block{height:180px;border-radius:2px;margin-bottom:18px;}
+
+  /* header */
+  header{background:var(--white);color:var(--ink);border-bottom:1px solid var(--line);}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;max-width:1080px;margin:0 auto;}
+  .brand{font-family:'Fraunces', serif;font-size:19px;}
+  .brand em{font-style:normal;color:var(--blue);}
+  .nav-cta{font-size:14px;font-weight:600;padding:10px 18px;border:1px solid var(--line);border-radius:var(--radius);color:var(--ink);}
+  .nav-cta:hover{background:var(--paper-dim);}
+
+  /* hero — mirrors EZRA: caps subline, two body paragraphs, then a big stat, then an impact eyebrow+subhead, then a trust line, then CTA */
+  .hero{background:var(--white);color:var(--ink);padding:80px 0 0;}
+  .hero-inner{max-width:640px;}
+  .hero h1{font-size:44px;line-height:1.12;color:var(--ink);}
+  .hero .capline{
+    display:block;
+    margin-top:18px;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--blue);
+  }
+  .hero .lede{margin-top:22px;font-size:17px;color:var(--slate);line-height:1.65;max-width:52ch;}
+  .hero .lede + .lede{margin-top:14px;}
+  .hero-stat{
+    margin-top:44px;
+    padding-top:40px;
+    border-top:1px solid var(--line);
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:28px;
+    align-items:center;
+  }
+  .hero-stat .num{font-family:'Fraunces', serif;font-size:56px;color:var(--blue);line-height:1;}
+  .hero-stat .cap{font-size:15px;color:var(--slate);max-width:34ch;line-height:1.5;}
+  .impact{margin-top:44px;padding-top:36px;border-top:1px solid var(--line);}
+  .impact .eyebrow{font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);}
+  .impact h2{margin-top:12px;font-size:24px;color:var(--ink);max-width:26ch;line-height:1.3;}
+  .trust-line{margin-top:36px;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--slate);}
+  .hero-cta{margin-top:26px;padding-bottom:64px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+  .btn-primary{background:var(--blue);color:var(--white);font-weight:700;font-size:15px;padding:14px 26px;border-radius:var(--radius);border:none;cursor:pointer;text-decoration:none;display:inline-block;}
+  .btn-primary:hover{filter:brightness(0.88);}
+  .hero-note{font-size:13px;color:var(--slate);}
+
+  /* process — 5-step strip like EZRA's baseline/focus/coach/checkin/outcomes */
+  .process{background:var(--white);padding:88px 0;}
+  .section-head{max-width:600px;margin-bottom:44px;}
+  .section-head .eyebrow{font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;}
+  .section-head h2{font-size:30px;color:var(--ink);line-height:1.25;}
+  .section-head p{margin-top:14px;font-size:16px;color:var(--slate);line-height:1.6;}
+  .steps{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line);border-radius:4px;overflow:hidden;}
+  .step{padding:26px 20px;border-right:1px solid var(--line);background:var(--paper-dim);}
+  .step:last-child{border-right:none;}
+  .step .chev{color:var(--blue);margin-bottom:14px;}
+  .step h3{font-size:16px;color:var(--ink);margin-bottom:8px;}
+  .step p{font-size:13.5px;color:var(--slate);line-height:1.5;}
+
+  /* enterprise-scale band — mirrors EZRA's "1:1 coaching at enterprise scale" + 4 stat strip */
+  .scale{background:var(--white);padding:80px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .scale-head{max-width:620px;margin-bottom:48px;}
+  .scale-head h2{font-size:28px;color:var(--ink);}
+  .scale-head p{margin-top:14px;font-size:16px;color:var(--slate);line-height:1.65;max-width:60ch;}
+  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+  .stat-cell{background:var(--white);padding:30px 22px;text-align:left;}
+  .stat-cell .num{font-family:'Fraunces', serif;font-size:34px;color:var(--ink);}
+  .stat-cell .lbl{margin-top:6px;font-size:13.5px;color:var(--slate);line-height:1.5;}
+
+  /* capability section — mirrors "Make execution repeatable" two-column feature blocks */
+  .capability{background:var(--white);color:var(--ink);padding:88px 0;}
+  .capability .eyebrow{color:var(--blue);}
+  .capability .section-head h2{color:var(--ink);}
+  .capability .section-head p{color:var(--slate);}
+  .cap-lede{font-size:17px;color:var(--ink);max-width:50ch;margin-bottom:44px;line-height:1.6;}
+  .cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);}
+  .cap-block{background:var(--white);padding:36px 30px;}
+  .cap-block h3{font-size:19px;color:var(--ink);margin-bottom:12px;}
+  .cap-block p{font-size:14.5px;color:var(--slate);line-height:1.6;}
+
+  /* outcome metrics — mirrors EZRA's +19% / +28% / +13% row */
+  .outcomes{background:var(--white);padding:88px 0;}
+  .outcome-row{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;}
+  .outcome{border-top:2px solid var(--blue);padding-top:20px;}
+  .outcome .num{font-family:'Fraunces', serif;font-size:40px;color:var(--ink);}
+  .outcome .lbl{margin-top:6px;font-size:14.5px;color:var(--slate);line-height:1.5;}
+  .outcome-note{margin-top:36px;font-size:12.5px;color:var(--slate);}
+
+  /* final cta */
+  .final-cta{background:var(--white);color:var(--ink);padding:64px 0;border-top:1px solid var(--line);}
+  .final-grid{display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;}
+  .final-cta h2{font-size:28px;color:var(--ink);max-width:18ch;}
+  .final-cta .btn-primary{background:var(--blue);color:var(--white);}
+  .final-note{font-size:13px;margin-top:10px;color:var(--slate);}
+
+  footer{background:var(--white);color:var(--slate);padding:26px 0;font-size:13px;border-top:1px solid var(--line);}
+
+  @media (max-width: 860px){
+    .photo-band{height:200px;}
+    .steps{grid-template-columns:1fr;}
+    .step{border-right:none;border-bottom:1px solid var(--line);}
+    .step:last-child{border-bottom:none;}
+    .stat-row{grid-template-columns:1fr 1fr;}
+    .cap-grid{grid-template-columns:1fr;}
+    .outcome-row{grid-template-columns:1fr;gap:26px;}
+    .hero h1{font-size:32px;}
+    .hero-stat{grid-template-columns:1fr;gap:10px;}
+    .hero-stat .num{font-size:44px;}
+    section, .hero, .process, .scale, .capability, .outcomes{padding:56px 0;}
+    .wrap{padding:0 20px;}
+    .final-grid{flex-direction:column;align-items:flex-start;}
+    .nav{flex-wrap:wrap;gap:12px;padding:16px 20px;}
+  }
+
+  @media (max-width: 480px){
+    .wrap{padding:0 16px;}
+    .nav{padding:14px 16px;}
+    .brand{font-size:17px;}
+    .nav-cta{font-size:13px;padding:8px 14px;}
+    .hero{padding-top:56px;}
+    .hero h1{font-size:26px;}
+    .hero .capline{font-size:12px;}
+    .hero .lede{font-size:15.5px;}
+    .hero-stat{margin-top:32px;padding-top:28px;}
+    .hero-stat .num{font-size:36px;}
+    .hero-stat .cap{font-size:13.5px;}
+    .impact h2{font-size:20px;}
+    .trust-line{font-size:11px;}
+    .photo-band{height:150px;}
+    .photo-block{height:140px;}
+    section, .hero, .process, .scale, .capability, .outcomes{padding:40px 0;}
+    .section-head h2{font-size:24px;}
+    .stat-row{grid-template-columns:1fr;}
+    .stat-cell .num{font-size:28px;}
+    .cap-lede{font-size:15.5px;}
+    .cap-block{padding:26px 22px;}
+    .cap-block h3{font-size:17px;}
+    .outcome .num{font-size:32px;}
+    .final-cta h2{font-size:22px;}
+    .btn-primary{width:100%;text-align:center;padding:15px 22px;}
+    .hero-cta{width:100%;}
+    .hero-cta .btn-primary{width:100%;}
+    .final-grid .btn-primary{width:100%;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand">JoVE <em>Coach</em></div>
+    <a class="nav-cta" href="#trial">Start free trial</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <h1>Stop training managers. Start coaching them in the flow of work.</h1>
+    <span class="capline">Delegation. Feedback. Difficult conversations.</span>
+    <p class="lede">93 expert-built concept videos, each under 2 minutes, made for managers who don't have a day to spare for a workshop.</p>
+    <p class="lede">Every concept pairs with practice questions and saved progress, so a skill learned on Tuesday shows up in Wednesday's 1:1.</p>
+
+    <div class="hero-stat">
+      <div class="num">60%</div>
+      <div class="cap">of new managers say they received no real training before leading a team for the first time — illustrative figure, confirm before publishing.</div>
+    </div>
+
+    <div class="impact">
+      <div class="eyebrow">The impact of structured coaching</div>
+      <h2>When a 2-minute video becomes a daily habit, not a one-time course.</h2>
+    </div>
+
+    <div class="trust-line">Trusted by learners at 1,800+ organizations</div>
+
+    <div class="hero-cta">
+      <a class="btn-primary" href="#trial" id="trial">Start my free trial</a>
+    </div>
+    <p class="hero-note">7-day free trial · no credit card required</p>
+  </div>
+</section>
+
+<div class="photo-frame photo-band">
+  <img src="https://assets-global.website-files.com/63062129119620a44791a2eb/639b7845e9be869771e540b8_mural-blog-images.jpg" alt="Manager coaching moment">
+  <span class="cap">The moment coaching actually happens — not a classroom, a 1:1</span>
+</div>
+
+<section class="process">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">How it works</div>
+      <h2>Five moves, repeated until they're second nature.</h2>
+      <p>No cohort schedule. Managers move through this on their own clock, one concept at a time.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="chev"></span><h3>Pick the gap</h3><p>Start with the concept that matches this week's real problem.</p></div>
+      <div class="step"><span class="chev"></span><h3>Choose the course</h3><p>Work a structured sequence, or jump straight to one video.</p></div>
+      <div class="step"><span class="chev"></span><h3>Watch + practice</h3><p>Each 2-minute video pairs with in-platform practice questions.</p></div>
+      <div class="step"><span class="chev"></span><h3>Track progress</h3><p>Progress saves automatically — pick up exactly where you left off.</p></div>
+      <div class="step"><span class="chev"></span><h3>Earn the certificate</h3><p>Pass the quiz, earn a certificate, prove the skill on the job.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="scale">
+  <div class="wrap">
+    <div class="scale-head">
+      <h2>Self-paced coaching at organizational scale</h2>
+      <p>When managers are promoted without training, performance slips team-wide. JoVE Coach makes it simple to roll out structured, self-paced development across a team — no cohort schedule, no classroom time, no program admin for L&D to run.</p>
+    </div>
+    <div class="photo-frame photo-block" style="height:260px; margin-bottom:36px;">
+      <img src="https://www.intoo.com/wp-content/uploads/sites/5/2023/11/AdobeStock_600165716.jpg" alt="Team collaborating at organizational scale">
+    </div>
+    <div class="stat-row">
+      <div class="stat-cell"><div class="num">1,000,000+</div><div class="lbl">learners on the platform</div></div>
+      <div class="stat-cell"><div class="num">1,800+</div><div class="lbl">organizations</div></div>
+      <div class="stat-cell"><div class="num">93</div><div class="lbl">concept videos</div></div>
+      <div class="stat-cell"><div class="num">13</div><div class="lbl">structured micro-courses</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="capability">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Make the first 90 days repeatable</div>
+      <h2>Don't add another course. Change how new managers handle the week.</h2>
+    </div>
+    <p class="cap-lede">JoVE Coach handles the content, structure, and tracking — so managers spend their time applying a skill, not sitting through a class about it.</p>
+    <div class="cap-grid">
+      <div class="cap-block">
+        <div class="photo-frame photo-block">
+          <img src="https://picsum.photos/seed/jove-cap-desk/800/600" alt="Placeholder — replace with real photography of a new manager at work">
+        </div>
+        <h3>Reduce the guesswork in a manager's first 90 days</h3>
+        <p>Less trial-and-error on delegation and feedback. A clear next concept to watch, not a syllabus to get through.</p>
+      </div>
+      <div class="cap-block">
+        <div class="photo-frame photo-block">
+          <img src="https://picsum.photos/seed/jove-cap-team/800/600" alt="Placeholder — replace with real photography of a team collaborating">
+        </div>
+        <h3>Build habits that hold up under a real team</h3>
+        <p>Practice questions, saved progress, and certificates that prove the skill was actually learned — not just watched.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="outcomes">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Built for the work, not the classroom</div>
+      <h2>Managers apply what they watch inside the same week.</h2>
+    </div>
+    <div class="outcome-row">
+      <div class="outcome"><div class="num">93</div><div class="lbl">concept videos across delegation, feedback, and difficult conversations</div></div>
+      <div class="outcome"><div class="num">&lt;2min</div><div class="lbl">average video length — built for a gap between meetings</div></div>
+      <div class="outcome"><div class="num">13</div><div class="lbl">certificates available across the full micro-course library</div></div>
+    </div>
+    <p class="outcome-note">Figures reflect current platform content. Swap in performance-lift data (ramp time, 1:1 confidence, completion rate) once available from your own cohorts.</p>
+  </div>
+</section>
+
+<section class="final-cta">
+  <div class="wrap final-grid">
+    <div>
+      <h2>Your first team deserves a manager who's ready.</h2>
+      <p class="final-note">7-day free trial · no credit card required</p>
+    </div>
+    <a class="btn-primary" href="#trial">Start my free trial</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© JoVE Coach — New Manager Essentials</div>
+</footer>
+
+</body>
+</html>
